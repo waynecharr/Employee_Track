@@ -4,3 +4,4 @@
 
 - "initial commit" has the initial commit
 - "set up schema.sql database tables, added employee_db as well as department, role, and employees table" 
+- "added a seeds.sql file to give the employee_db a preconstructed table"
