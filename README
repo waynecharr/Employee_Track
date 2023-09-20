@@ -1,1 +1,6 @@
 ## Employee Tracker
+
+# Update History 
+
+- "initial commit" has the initial commit
+- "set up schema.sql database tables, added employee_db as well as department, role, and employees table" 
