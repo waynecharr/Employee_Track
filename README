@@ -7,3 +7,4 @@
 - "added a seeds.sql file to give the employee_db preconstructed data"
 - "added a menu functionality. Able to display departments, roles, and views as well as created prompts for other functions that do nothing at present"
 - "added queries to properly display employees,departments,etc. started fleshing out the ability to add new departments/roles." 
+- "added query to the view employee case, view employees now displays properly"
