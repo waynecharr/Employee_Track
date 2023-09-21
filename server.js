@@ -24,7 +24,7 @@ const db = mysql.createConnection(
 
 
 async function mainMenu() {
-    const { action } = await inquirer.prompt([
+    const{ action } = await inquirer.prompt([
         {
             type: 'list',
             name: 'action',
@@ -49,7 +49,14 @@ async function mainMenu() {
         case 'Update Employee Role':
             break;
         case 'View All Roles':
-            db.query('SELECT * FROM role', (err, results) => {
+          const queryRoles = `SELECT
+          r.id AS id, 
+          r.title AS title, 
+          r.salary AS salary, 
+          d.name AS department 
+          FROM role r
+          JOIN department d ON r.department = d.id;`
+            db.query(queryRoles, (err, results) => {
                 if (err) {
                   console.error('Error retrieving employees:', err);
                 } else {
@@ -70,8 +77,25 @@ async function mainMenu() {
                     mainMenu();
                   });
                 break;
-        case 'Add Department':
-            break;
+      case 'Add Department':
+        const response = await inquirer.prompt([
+          {
+            type: 'input',
+            name: 'department',
+            message: 'Add the name of your department:',
+          },
+        ]);
+        const addName = `insert Into department(name)
+          VALUES (?);`
+        db.query(addName, [response.department], (err, results) => {
+          if (err) {
+            console.error('Not a valid department name', err);
+          } else {
+            console.table(results);
+          }
+          mainMenu();
+        });
+        break;
         case 'Exit':
             console.log('Goodbye!');
             process.exit(0);
