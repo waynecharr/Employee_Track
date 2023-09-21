@@ -22,6 +22,18 @@ const db = mysql.createConnection(
   console.log(`Connected to the employee_db database.`)
 );
 
+function fetchDepartments() {
+  return new Promise((resolve, reject) => {
+    db.query('SELECT id, name FROM department', (err, results) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+}
+
 
 async function mainMenu() {
   const { action } = await inquirer.prompt([
@@ -78,6 +90,38 @@ async function mainMenu() {
       });
       break;
     case 'Add Role':
+      const departments = await fetchDepartments();
+      const rResponse = await inquirer.prompt([
+        {
+          type: 'input',
+          name: 'role',
+          message: 'Add the name of the Role:',
+        },
+        {
+          type: 'input',
+          name: 'salary',
+          message: 'Add the slary for the role:',
+        },
+        {
+          type: 'list',
+          name: 'department',
+          message: 'Select the department for the role:',
+          choices: departments.map((dept) => ({
+            name: dept.name,
+            value: dept.id,
+          })),
+        },
+      ]);
+      const addRole = `insert Into role(title, salary, department)
+          VALUES (?, ?, ?);`
+      db.query(addRole, [rResponse.role, rResponse.salary, rResponse.department], (err, results) => {
+        if (err) {
+          console.error('Not a valid role title', err);
+        } else {
+          console.table(results);
+        }
+        mainMenu();
+      });
       break;
     case 'View All Departments':
       db.query('SELECT * FROM department', (err, results) => {
@@ -90,16 +134,16 @@ async function mainMenu() {
       });
       break;
     case 'Add Department':
-      const response = await inquirer.prompt([
+      const dResponse = await inquirer.prompt([
         {
           type: 'input',
           name: 'department',
           message: 'Add the name of your department:',
         },
       ]);
-      const addName = `insert Into department(name)
+      const addDepartment = `insert Into department(name)
           VALUES (?);`
-      db.query(addName, [response.department], (err, results) => {
+      db.query(addDepartment, [dResponse.department], (err, results) => {
         if (err) {
           console.error('Not a valid department name', err);
         } else {
