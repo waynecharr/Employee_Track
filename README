@@ -10,3 +10,4 @@
 - "added query to the view employee case, view employees now displays properly"
 - "added the functionality which allows you to add a role, and a new function that fetches departments"
 - "added the functions that allows you to add employees, giving them a name, role, and manager"
+- "added the case and functionality to give users the ability to update existing employee's role by choosing an employee and then a new role"

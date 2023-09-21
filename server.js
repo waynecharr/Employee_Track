@@ -137,7 +137,45 @@ async function mainMenu() {
           mainMenu();
         });
         break;
-    case 'Update Employee Role':
+    case 'Update employee role':
+      const updateEmployees = await fetchEmployees();
+      const updateRoles = await fetchRoles();
+    
+      const uResponse = await inquirer.prompt([
+        {
+          type: 'list',
+          name: 'employee_id',
+          message: 'Select the employee you want to update:',
+          choices: updateEmployees.map((employee) => ({
+            name: `${employee.first_name} ${employee.last_name}`,
+            value: employee.id,
+          })),
+        },
+        {
+          type: 'list',
+          name: 'new_role_id',
+          message: 'Select the new role for the employee:',
+          choices: updateRoles.map((role) => ({
+            name: role.title,
+            value: role.id,
+          })),
+        },
+      ]);
+    
+      const updateEmployeeRole = `UPDATE employee SET role_id = ? WHERE id = ?`;
+    
+      db.query(
+        updateEmployeeRole,
+        [uResponse.new_role_id, uResponse.employee_id],
+        (err, results) => {
+          if (err) {
+            console.error('Error updating employee role:', err);
+          } else {
+            console.log('Employee role updated successfully.');
+          }
+          mainMenu();
+        }
+      );
       break;
     case 'View All Roles':
       const queryRoles = `SELECT
