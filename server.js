@@ -34,6 +34,19 @@ function fetchDepartments() {
   });
 }
 
+function fetchRoles() {
+  return new Promise((resolve, reject) => {
+    db.query('SELECT id, title, salary FROM role', (err, results) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+}
+
+
 
 async function mainMenu() {
   const { action } = await inquirer.prompt([
@@ -69,6 +82,38 @@ async function mainMenu() {
       });
       break;
     case 'Add Employee':
+      const roles = await fetchRoles();
+      const eResponse = await inquirer.prompt([
+        {
+          type: 'input',
+          name: 'first_name',
+          message: 'Add the first name of the employee:',
+        },
+        {
+          type: 'input',
+          name: 'last_name',
+          message: 'Add the last name of the employee:',
+        },
+        {
+          type: 'list',
+          name: 'employee_role',
+          message: 'Select the role for the employee:',
+          choices: roles.map((roles) => ({
+            name: roles.title,
+            value: roles.id,
+          })),
+        },
+      ]);
+      const addEmployee = `insert into employee(first_name, last_name, employee_role)
+          VALUES (?, ?, ?);`
+      db.query(addEmployee, [eResponse.first_name, eResponse.last_name, eResponse.employee_role], (err, results) => {
+        if (err) {
+          console.error('Not a valid role title', err);
+        } else {
+          console.table(results);
+        }
+        mainMenu();
+      });
       break;
     case 'Update Employee Role':
       break;
@@ -161,3 +206,36 @@ async function mainMenu() {
 
 // Call the main menu to start the application
 mainMenu();
+
+      const roles = await fetchRoles();
+      const eResponse = await inquirer.prompt([
+        {
+          type: 'input',
+          name: 'first_name',
+          message: 'Add the first name of the employee:',
+        },
+        {
+          type: 'input',
+          name: 'last_name',
+          message: 'Add the last name of the employee:',
+        },
+        {
+          type: 'list',
+          name: 'employee_role',
+          message: 'Select the role for the employee:',
+          choices: roles.map((roles) => ({
+            name: roles.title,
+            value: roles.id,
+          })),
+        },
+      ]);
+      const addEmployee = `insert into employee(first_name, last_name, employee_role)
+          VALUES (?, ?, ?);`
+      db.query(addEmployee, [eResponse.first_name, eResponse.last_name, eResponse.employee_role], (err, results) => {
+        if (err) {
+          console.error('Not a valid role title', err);
+        } else {
+          console.table(results);
+        }
+        mainMenu();
+      });
