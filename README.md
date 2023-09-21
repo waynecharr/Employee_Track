@@ -34,6 +34,7 @@ This is an employee database that uses inquirer and SQL to track employees role,
 - "added the functions that allows you to add employees, giving them a name, role, and manager"
 - "added the case and functionality to give users the ability to update existing employee's role by choosing an employee and then a new role"
 - "updated README. Added demonstration video." 
+- "changed README file to a README.md" 
 
 # Contributing
 
